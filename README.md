@@ -13,6 +13,7 @@ This repository allows to identify sand bar using wave breaking patterns. To obt
 - `orientation`: Waves direction 
 
 **Inputs**
+
 It's necessary to have rectified images of your beach of interest and it's very important than wave direction is from top to bottom (`orientation`: vertical) or from right to left of images (`orientation`: horizontal). That's because the method propuse by Sáez et al. (2021) was trained with a specific direction (horizontal) then if you have vertical direction the algorithm will turn the images.
 
 
