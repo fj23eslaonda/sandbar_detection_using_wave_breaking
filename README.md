@@ -16,6 +16,27 @@ This repository allows to identify sand bar using wave breaking patterns. To obt
 
 It's necessary to have rectified images of your beach of interest and it's very important than wave direction is from top to bottom (`orientation`: vertical) or from right to left of images (`orientation`: horizontal). That's because the method propuse by Sáez et al. (2021) was trained with a specific direction (horizontal) then if you have vertical direction the algorithm will turn the images.
 
+<p align="center">
+  <img src="figs/orientation.png"  width="500" />
+</p>
+<p align="center">
+    <em>Figure 1: Examples of wave directions.</em>
+</p>
+
 ## Implementation
-The algorithm uses tensorflow packages then it's necessary to create a new virtual environment. All packages are in `requirements.txt`.
+The algorithm uses tensorflow packages then it's necessary to create a new virtual environment. All packages are in `requirements.txt`. The algorithm uses python 3.7.
+#### Create virtual environment
+1. `virtualenv <my_env_name>`
+2. `source <my_env_name>/bin/activate`
+3. `pip install -r requirements.txt`
+
+#### Activate virtual environment, change directory and run algorithm
+1. `source <my_env_name>/bin/activate`
+2. `cd ./Desktop/main_path`
+3. `python3 run_prediction.py --beach_path /beach_folder/ --image_path /frames/ --output_path /prediction_mask/ --orientation vertical/horizontal --plot_mask True --plot_mask_over_mask True`
+
+## Comments
+- `main_path` by default is the folder where the repository is cloned using `os.getcwd()`
+- `plot_mask` by default is `False`
+- `plot_mask_over_img` by default is `False`
 
