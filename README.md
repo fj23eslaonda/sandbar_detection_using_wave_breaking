@@ -23,6 +23,24 @@ It's necessary to have rectified images of your beach of interest and it's very 
     <em>Figure 1: Examples of wave directions.</em>
 </p>
 
+**Folders**
+```
+Main_folder
+    ├─── beach_path
+         ├─── frames
+              ├─── P_00000.png
+              ├─── ...
+              ├─── P_N.png
+         ├─── sandbar_results
+    ├─── model
+         ├─── best_model_final.h5
+         ├─── model_final.json
+    ├─── duck_model.py
+    ├─── sandbar.py
+    ├─── run_prediction.py
+    ├─── requirements.py
+```    
+
 ## Implementation
 The algorithm uses tensorflow packages then it's necessary to create a new virtual environment. All packages are in `requirements.txt`. The algorithm uses python 3.7.
 #### Create virtual environment
