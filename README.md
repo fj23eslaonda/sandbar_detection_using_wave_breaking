@@ -43,8 +43,13 @@ Main_folder
 
 ## Implementation
 The algorithm uses tensorflow packages then it's necessary to create a new virtual environment. All packages are in `requirements.txt`. The algorithm uses python 3.7.
+#### Install Python 3.7
+1. `sudo add-apt-repository ppa:deadsnakes/ppa`
+2. `sudo apt-get update`
+3. `sudo apt-get install python3.7`
+
 #### Create virtual environment
-1. `virtualenv <my_env_name>`
+1. `virtualenv -p python3.7 <my_env_name>`
 2. `source <my_env_name>/bin/activate`
 3. `pip install -r requirements.txt`
 
