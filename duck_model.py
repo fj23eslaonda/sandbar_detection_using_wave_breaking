@@ -75,6 +75,9 @@ class DuckModel:
         :return: model
         """
         # Load JSON and Create model
+
+        # Load JSON and Create model
+
         json_file = open(self.main_path + '/model/model_final.json', 'r')
         loaded_model_json = json_file.read()
         json_file.close()
@@ -202,14 +205,17 @@ class DuckModel:
 
         # MAKE PREDICTION IN EACH SPLIT IMAGES
         for img in x_tst:
-            X = np.zeros((1, 512, 512, 1), dtype=np.uint8)
+            X = np.zeros((1, 512, 512, 1))
             if self.orientation == 'vertical':
                 img = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
             X[0] = img[..., np.newaxis] / 255.0
 
             # CONDITION TO JUST USE IMAGE WITH INFORMATION
+            
             if np.mean(X) >= 10 / 255:
+
                 y_tst = np.squeeze(model.predict(X, verbose=True)) > 0.7
+
                 if self.orientation == 'vertical':
                     y_tst = cv2.rotate(y_tst * 255.0, cv2.ROTATE_90_COUNTERCLOCKWISE)/255.0
                 masks.append(y_tst)
@@ -288,10 +294,12 @@ class DuckModel:
             self.plot_messages('PREDICTION N°' + str(ix + 1) + ' of ' + str(len(list_img)))
             # ---------------------------------------------------------
             x_tst, mean_image, original_img = self.split_img(name_img, size, mean_image)
+           
             # ---------------------------------------------------------
             masks = self.get_prediction(model, x_tst)
             # ---------------------------------------------------------
             mean_mask, mask = self.concatenate_and_save(masks, name_img, mean_mask, size)
+            break
 
             if self.plot_mask_over_img:
                 plot_predictions(original_img, mask, self.beach_path, name_img, size)
