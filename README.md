@@ -43,18 +43,17 @@ Main_folder
 
 ## Implementation
 The algorithm uses tensorflow packages then it's necessary to create a new virtual environment. All packages are in `requirements.txt`. The algorithm uses python 3.7.
-#### Clone repository
-`git clone https://github.com/fj23eslaonda/sandbar_detection.git`
 
 #### Install Python 3.7
 1. `sudo add-apt-repository ppa:deadsnakes/ppa`
 2. `sudo apt-get update`
 3. `sudo apt-get install python3.7`
 
-#### Create virtual environment
+#### Create virtual environment and clone respository
 1. `virtualenv -p python3.7 <my_env_name>`
 2. `source <my_env_name>/bin/activate`
-3. `pip install -r requirements.txt`
+3. `git clone https://github.com/fj23eslaonda/sandbar_detection.git`
+4. `pip install -r requirements.txt`
 
 #### Activate virtual environment, change directory and run algorithm
 1. `source <my_env_name>/bin/activate`
