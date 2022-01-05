@@ -53,12 +53,12 @@ The algorithm uses tensorflow packages then it's necessary to create a new virtu
 1. `virtualenv -p python3.7 <my_env_name>`
 2. `source <my_env_name>/bin/activate`
 3. `git clone https://github.com/fj23eslaonda/sandbar_detection.git`
-4. `pip install -r requirements.txt`
 
 #### Activate virtual environment, change directory and run algorithm
-1. `source <my_env_name>/bin/activate`
-2. `cd ./Desktop/main_path`
-3. `python3 run_prediction.py --beach_path /beach_folder/ --image_path /frames/ --output_path /prediction_mask/ --orientation vertical/horizontal --plot_mask True --plot_mask_over_mask True`
+1. `cd ./Desktop/main_path`
+2. `pip install -r requirements.txt`
+3. Create **folders** with datasets
+4. `python3 run_prediction.py --beach_path /beach_folder/ --image_path /frames/ --output_path /prediction_mask/ --orientation vertical/horizontal --plot_mask True --plot_mask_over_mask True`
 
 ## Comments
 - `main_path` by default is the folder where the repository is cloned using `os.getcwd()`
