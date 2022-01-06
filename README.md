@@ -52,7 +52,7 @@ The algorithm uses tensorflow packages then it's necessary to create a new virtu
 #### Create virtual environment and clone respository
 1. `virtualenv -p python3.7 <my_env_name>`
 2. `source <my_env_name>/bin/activate`
-3. `git clone https://github.com/fj23eslaonda/sandbar_detection.git`
+3. `git clone https://github.com/fj23eslaonda/sandbar_detection_using_wave_breaking.git`
 
 #### Activate virtual environment, change directory and run algorithm
 1. `cd ./Desktop/main_path`
