@@ -41,6 +41,8 @@ def parse_args():
                         help='Output path for video and mask')
     parser.add_argument('--orientation', type=str, default='vertical',
                         help='Wave directions')
+    parser.add_argument('--number_img', type=int, default = False,
+                        help='Wave directions')
     arguments = parser.parse_args()
     return arguments
 
@@ -59,6 +61,7 @@ output_path        = args.output_path
 plot_mask_over_img = args.plot_mask_over_img
 plot_mask          = args.plot_mask
 orientation        = args.orientation
+number_img         = args.number_img
 
 # -----------------------------------------------------------------
 #
@@ -91,7 +94,8 @@ model = duck_model.DuckModel(main_path,
                              output_path,
                              plot_mask_over_img,
                              plot_mask,
-                             orientation
+                             orientation,
+                             number_img
                              )
 # ITERATION
 model.run_model()

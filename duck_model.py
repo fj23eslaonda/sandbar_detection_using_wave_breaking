@@ -34,7 +34,8 @@ class DuckModel:
                  output_path,
                  plot_mask_over_img,
                  plot_mask,
-                 orientation):
+                 orientation, 
+                 number_img):
 
         self.main_path = main_path                    # Main folder
         self.image_path = image_path                  # Image input folder
@@ -43,7 +44,8 @@ class DuckModel:
         self.plot_mask = plot_mask                    # Boolean variable to save plots or not
         self.plot_mask_over_img = plot_mask_over_img  # Boolean variable to save plots or not
         self.orientation   = orientation              # Waves direction
-
+        self.number_img = number_img                  # Number of images used
+ 
     # -----------------------------------------------------------------
     # 
     # LOAD IMAGE NAMES LIST
@@ -278,7 +280,10 @@ class DuckModel:
     # -----------------------------------------------------------------
     def run_model(self):
         # IMAGES NAME
-        list_img = self.load_list_img()
+        if self.number_img != False:
+            list_img = self.load_list_img()[:self.number_img]
+        else: 
+            list_img = self.load_list_img()
 
         # LOAD MODEL
         self.plot_messages('LOAD MODEL')

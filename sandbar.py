@@ -31,21 +31,28 @@ import cv2
 #
 def plot_img_and_mask(original_img, mean_mask, main_path, beach_path, x_point, y_point, orientation):
     fig, axs = plt.subplots(1, 2, figsize=(14, 7), constrained_layout=True)
+    plt.suptitle('The Sand Bar detection result on '+ str(beach_path[1:-1]), fontsize=20)
 
     axs[0].imshow(original_img / np.max(original_img))
     map1 = axs[0].imshow(mean_mask, vmax=np.nanmax(mean_mask), cmap='turbo')
-    axs[0].set_xlabel('Alongshore distance, y [pixels]', fontsize=14)
-    axs[0].set_ylabel('Cross-shore distance, x [pixels]', fontsize=14)
+    if orientation == 'vertical':
+        axs[0].set_xlabel('Alongshore distance, y [pixels]', fontsize=14)
+        axs[0].set_ylabel('Cross-shore distance, x [pixels]', fontsize=14)
+    else:
+        axs[0].set_ylabel('Alongshore distance, y [pixels]', fontsize=14)
+        axs[0].set_xlabel('Cross-shore distance, x [pixels]', fontsize=14)
     axs[0].set_title('Cumulative Breaking Map', fontsize=14)
     axs[0].grid(linestyle='--', alpha=0.7)
-    fig.colorbar(map1, ax=axs[0], shrink=0.45)
+    fig.colorbar(map1, ax=axs[0], fraction=0.05, pad=0.04)
 
     axs[1].imshow(original_img / np.max(original_img), vmax=np.max(original_img))
-    if orientation == 'horizontal':
+    if orientation == 'vertical':
         axs[1].scatter(x_point, y_point, marker='x', c='r', s=8, label='Wave Breaking Method')
+        axs[1].set_xlabel('Alongshore distance, y [pixels]', fontsize=14)
     else:
         axs[1].scatter(y_point, x_point, marker='x', c='r', s=8, label='Wave Breaking Method')
-    axs[1].set_xlabel('Alongshore distance, y [pixels]', fontsize=14)
+        axs[1].set_xlabel('Cross-shore distance, x [pixels]', fontsize=14)
+    
     axs[1].set_title('Average Image', fontsize=14)
     axs[1].grid(linestyle='--', alpha=0.7)
     axs[1].legend()
@@ -54,6 +61,7 @@ def plot_img_and_mask(original_img, mean_mask, main_path, beach_path, x_point, y
     plt.savefig(saving_path + '/cumulative_breaking.png',
                 bbox_inches='tight',
                 pad_inches=1)
+    plt.show()
     plt.close("all")
 
     # SAVE MATRIX
