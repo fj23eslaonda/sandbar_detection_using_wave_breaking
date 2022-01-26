@@ -299,7 +299,6 @@ class DuckModel:
             masks = self.get_prediction(model, x_tst)
             # ---------------------------------------------------------
             mean_mask, mask = self.concatenate_and_save(masks, name_img, mean_mask, size)
-            break
 
             if self.plot_mask_over_img:
                 plot_predictions(original_img, mask, self.beach_path, name_img, size)
