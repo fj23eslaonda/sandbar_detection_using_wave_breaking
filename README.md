@@ -11,6 +11,7 @@ This repository allows to identify sand bar using wave breaking patterns. To obt
 - `plot_mask`: Boolean variable to save plots or not
 - `plot_mask_over_img`: Boolean variable to save plots or not
 - `orientation`: Waves direction 
+- `number_img`: Number of images to be used
 
 **Inputs**
 
