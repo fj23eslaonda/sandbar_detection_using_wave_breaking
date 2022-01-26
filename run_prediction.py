@@ -61,7 +61,7 @@ output_path        = args.output_path
 plot_mask_over_img = args.plot_mask_over_img
 plot_mask          = args.plot_mask
 orientation        = args.orientation
-number_img         = args.number_img
+number_img         = int(args.number_img)
 
 # -----------------------------------------------------------------
 #
