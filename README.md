@@ -11,8 +11,8 @@ all_inputs = {
     "mask_folder": "predicted_mask",               # Predicted mask folder
     "mask_over_image_folder": "mask_over_image",   # Folder to save mask over image folder
     "sandbar_results": "sandbar_results",          # Folder to save sand bar results
-    "plot_mask": true,                             # Boolean variable to save masks or not
-    "plot_mask_over_image": true,                  # Boolean variable to save masks or not
+    "plot_mask": false,                            # Boolean variable to save masks or not
+    "plot_mask_over_image": false,                 # Boolean variable to save masks or not
     "orientation": "horizontal",                   # Wave direction
     "beach_name": "Biarritz"                       # Name of the beach analyzed to plot titles
 }
