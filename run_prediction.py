@@ -18,34 +18,22 @@ import os
 import argparse
 import duck_model
 import shutil
+from pathlib import Path
 
+from all_functions import *
 
 # -----------------------------------------------------------------
 # 
 # INPUTS
 #
 # -----------------------------------------------------------------
-def parse_args():
-    parser = argparse.ArgumentParser(description='Path and image size')
-    parser.add_argument('--beach_path', type=str,
-                        help='beach folder')
-    parser.add_argument('--main_path', type=str, default=os.getcwd(),
-                        help='Duck model main path')
-    parser.add_argument('--image_path', type=str, default='./frames/',
-                        help='Image input path')
-    parser.add_argument('--output_path', type=str, default='./prediction_mask',
-                        help='Output path for mask')
-    parser.add_argument('--plot_mask', type=bool, default=False,
-                        help='Output path for mask')
-    parser.add_argument('--plot_mask_over_img', type=bool, default=False,
-                        help='Output path for video and mask')
-    parser.add_argument('--orientation', type=str, default='vertical',
-                        help='Wave directions')
-    parser.add_argument('--number_img', type=int, default = False,
-                        help='Wave directions')
-    arguments = parser.parse_args()
-    return arguments
-
+# Read file
+parser = argparse.ArgumentParser(description='All necessary inputs and number of images to use')
+parser.add_argument('--parameters', type=str,
+                    help='Dictionary with all necessary inputs')
+parser.add_argument('--number_img', type=int, default=False,
+                    help='Number of images to use')
+args = parser.parse_args()
 
 # -----------------------------------------------------------------
 # 
@@ -53,49 +41,39 @@ def parse_args():
 #
 # -----------------------------------------------------------------
 # INPUTS
-args = parse_args()
-main_path          = args.main_path
-beach_path         = args.beach_path
-image_path         = args.image_path
-output_path        = args.output_path
-plot_mask_over_img = args.plot_mask_over_img
-plot_mask          = args.plot_mask
-orientation        = args.orientation
-number_img         = int(args.number_img)
+# open file
+all_inputs = read_json_to_dict(args.parameters)
+all_inputs['main_path'] = Path(os.getcwd())
 
-# -----------------------------------------------------------------
+number_img = args.number_img
+# ------------------------------------------------------------
 #
 # REMOVE EXISTENT FOLDERS
 #
 # -----------------------------------------------------------------
-if os.path.exists(args.main_path + '/name_img.txt'):
-    os.remove(args.main_path + '/name_img.txt')
+if (all_inputs['main_path'] / all_inputs['mask_folder']).exists():
+    shutil.rmtree(all_inputs['main_path'] / all_inputs['mask_folder'])
 # -----------------------------------------------------------------
-if os.path.exists('.' + args.beach_path + args.output_path):
-    shutil.rmtree('.' + args.beach_path + args.output_path)
+if (all_inputs['main_path'] / all_inputs['mask_over_image_folder']).exists():
+    shutil.rmtree(all_inputs['main_path'] / all_inputs['mask_over_image_folder'])
 # -----------------------------------------------------------------
-if os.path.exists('.' + args.beach_path + '/plot_results/'):
-    shutil.rmtree('.' + args.beach_path + '/plot_results/')
+if (all_inputs['main_path'] / all_inputs['sandbar_results']).exists():
+    shutil.rmtree(all_inputs['main_path'] / all_inputs['sandbar_results'])
 # -----------------------------------------------------------------
-if os.path.exists('.' + args.beach_path + '/sandbar_results/'):
-    shutil.rmtree('.' + args.beach_path + '/sandbar_results/')
-# -----------------------------------------------------------------
-if plot_mask_over_img:
-    os.system('mkdir -m 771 .' + args.beach_path + '/plot_results/')
-if plot_mask:
-    os.system('mkdir -m 771 .' + args.beach_path + args.output_path)
-os.system('mkdir -m 771 .' + args.beach_path + '/sandbar_results/')
+if all_inputs['plot_mask']:
+    (all_inputs['main_path'] / all_inputs['beach_folder'] / all_inputs['mask_folder']).mkdir(mode=0o755,
+                                                                                             exist_ok=True)
+
+if all_inputs['plot_mask_over_image']:
+    (all_inputs['main_path'] / all_inputs['beach_folder'] / all_inputs['mask_over_image_folder']).mkdir(mode=0o755,
+                                                                                                        exist_ok=True)
+
+(all_inputs['main_path'] / all_inputs['beach_folder'] / all_inputs['sandbar_results']).mkdir(mode=0o755,
+                                                                                             exist_ok=True)
 # -----------------------------------------------------------------
 
 # FUNCTIONS
-model = duck_model.DuckModel(main_path,
-                             beach_path,
-                             image_path,
-                             output_path,
-                             plot_mask_over_img,
-                             plot_mask,
-                             orientation,
-                             number_img
-                             )
+model = duck_model.DuckModel(all_inputs,
+                             number_img)
 # ITERATION
 model.run_model()

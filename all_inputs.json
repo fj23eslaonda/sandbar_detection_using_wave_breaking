@@ -1,0 +1,11 @@
+{
+    "beach_folder": "Biarritz_frames",
+    "image_folder": "frames",
+    "mask_folder": "predicted_mask",
+    "mask_over_image_folder": "mask_over_image",
+    "sandbar_results": "sandbar_results",
+    "plot_mask": false,
+    "plot_mask_over_image": false,
+    "orientation": "horizontal",
+    "beach_name": "Biarritz"
+}

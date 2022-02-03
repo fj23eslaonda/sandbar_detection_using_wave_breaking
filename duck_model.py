@@ -17,7 +17,7 @@ make a prediction with Duck Model proposed for Sáez et al. (2021)
 import os
 import tensorflow as tf
 from tensorflow.keras.models import model_from_json
-from sandbar import *
+from all_functions import *
 
 
 class DuckModel:
@@ -28,24 +28,21 @@ class DuckModel:
     #
     # -----------------------------------------------------------------
     def __init__(self,
-                 main_path,
-                 beach_path,
-                 image_path,
-                 output_path,
-                 plot_mask_over_img,
-                 plot_mask,
-                 orientation, 
+                 all_inputs,
                  number_img):
 
-        self.main_path = main_path                    # Main folder
-        self.image_path = image_path                  # Image input folder
-        self.output_path = output_path                # Image output folder
-        self.beach_path = beach_path                  # Beach folder to save results
-        self.plot_mask = plot_mask                    # Boolean variable to save plots or not
-        self.plot_mask_over_img = plot_mask_over_img  # Boolean variable to save plots or not
-        self.orientation   = orientation              # Waves direction
-        self.number_img = number_img                  # Number of images used
- 
+        self.beach_folder = all_inputs['main_path'] / all_inputs['beach_folder']
+        self.images_folder = self.beach_folder / all_inputs['image_folder']
+        self.model_folder = all_inputs['main_path'] / "model"
+        self.save_path = self.beach_folder / all_inputs['sandbar_results']
+        self.number_img = number_img
+        self.orientation = all_inputs['orientation']
+        self.plot_mask = all_inputs['plot_mask']
+        self.plot_mask_over_image = all_inputs['plot_mask_over_image']
+        self.mask_folder = self.beach_folder / all_inputs['mask_folder']
+        self.mask_over_image_folder = self.beach_folder / all_inputs['mask_over_image_folder']
+        self.beach_name = all_inputs['beach_name']
+
     # -----------------------------------------------------------------
     # 
     # LOAD IMAGE NAMES LIST
@@ -58,7 +55,7 @@ class DuckModel:
         :param: beach folder path and image folder path
         :return: list
         """
-        list_img = sorted(os.listdir(self.main_path + self.beach_path + self.image_path))
+        list_img = sorted(os.listdir(self.images_folder))
 
         return list_img
 
@@ -80,12 +77,12 @@ class DuckModel:
 
         # Load JSON and Create model
 
-        json_file = open(self.main_path + '/model/model_final.json', 'r')
+        json_file = open(self.model_folder / "model_final.json", 'r')
         loaded_model_json = json_file.read()
         json_file.close()
         model = model_from_json(loaded_model_json, {"tf": tf})
         # Load weight
-        model.load_weights(self.main_path + "/model/best_model_final.h5")
+        model.load_weights(self.model_folder / "best_model_final.h5")
         return model
 
     # -----------------------------------------------------------------
@@ -121,7 +118,7 @@ class DuckModel:
         """
         size = dict()
         # INPUTS
-        img = cv2.imread(self.main_path + self.beach_path + self.image_path + list_img[0], 0)
+        img = cv2.imread(f"{self.images_folder / list_img[0]}", 0)
         old_height, old_width = (img.squeeze()).shape
         # ------------------------------------------------------------------------------------
         # CALCULATE NEW HEIGHT
@@ -136,9 +133,9 @@ class DuckModel:
         else:
             new_width = 512 * (old_width // 512)
         # ------------------------------------------------------------------------------------
-        size['new_width']  = new_width
+        size['new_width'] = new_width
         size['new_height'] = new_height
-        size['old_width']  = old_width
+        size['old_width'] = old_width
         size['old_height'] = old_height
 
         return size
@@ -158,7 +155,7 @@ class DuckModel:
         :return: x_tst and mean_image
         """
         # READ IMG AND SAVE IT
-        original_img = cv2.imread(self.main_path + self.beach_path + self.image_path + name_img)
+        original_img = cv2.imread(f"{self.images_folder / name_img}")
         mean_image = mean_image + original_img
 
         # PROCESSING
@@ -213,13 +210,13 @@ class DuckModel:
             X[0] = img[..., np.newaxis] / 255.0
 
             # CONDITION TO JUST USE IMAGE WITH INFORMATION
-            
+
             if np.mean(X) >= 10 / 255:
 
                 y_tst = np.squeeze(model.predict(X, verbose=True)) > 0.7
 
                 if self.orientation == 'vertical':
-                    y_tst = cv2.rotate(y_tst * 255.0, cv2.ROTATE_90_COUNTERCLOCKWISE)/255.0
+                    y_tst = cv2.rotate(y_tst * 255.0, cv2.ROTATE_90_COUNTERCLOCKWISE) / 255.0
                 masks.append(y_tst)
             else:
                 masks.append(np.zeros(np.squeeze(X[0]).shape))
@@ -251,7 +248,7 @@ class DuckModel:
 
         # IF YOU WANT SAVE MASK AS IMAGE
         if self.plot_mask:
-            cv2.imwrite(self.main_path + self.beach_path + self.output_path + name_img, new_mask * 255)
+            cv2.imwrite(f"{self.mask_folder / name_img}", new_mask * 255)
 
         mean_mask = mean_mask + new_mask
         return mean_mask, new_mask
@@ -274,15 +271,58 @@ class DuckModel:
         print(' ')
 
     # -----------------------------------------------------------------
+    #
+    # PLOT FINAL RESULT
+    #
+    # -----------------------------------------------------------------
+    def plot_img_and_mask(self, mean_img, mean_mask, x_point, y_point):
+        fig, axs = plt.subplots(1, 2, figsize=(14, 7), constrained_layout=True)
+        plt.suptitle('The Sand Bar detection result on ' + self.beach_name, fontsize=20)
+
+        axs[0].imshow(mean_img / np.max(mean_img))
+        map1 = axs[0].imshow(mean_mask, vmax=np.nanmax(mean_mask), cmap='turbo')
+        if self.orientation == 'vertical':
+            axs[0].set_xlabel('Alongshore distance, y [pixels]', fontsize=14)
+            axs[0].set_ylabel('Cross-shore distance, x [pixels]', fontsize=14)
+        else:
+            axs[0].set_ylabel('Alongshore distance, y [pixels]', fontsize=14)
+            axs[0].set_xlabel('Cross-shore distance, x [pixels]', fontsize=14)
+        axs[0].set_title('Cumulative Breaking Map', fontsize=14)
+        axs[0].grid(linestyle='--', alpha=0.7)
+        fig.colorbar(map1, ax=axs[0], fraction=0.05, pad=0.04)
+
+        axs[1].imshow(mean_img / np.max(mean_img), vmax=np.max(mean_img))
+        if self.orientation == 'vertical':
+            axs[1].scatter(x_point, y_point, marker='x', c='r', s=8, label='Wave Breaking Method')
+            axs[1].set_xlabel('Alongshore distance, y [pixels]', fontsize=14)
+        else:
+            axs[1].scatter(y_point, x_point, marker='x', c='r', s=8, label='Wave Breaking Method')
+            axs[1].set_xlabel('Cross-shore distance, x [pixels]', fontsize=14)
+
+        axs[1].set_title('Average Image', fontsize=14)
+        axs[1].grid(linestyle='--', alpha=0.7)
+        axs[1].legend()
+
+        plt.savefig(f"{self.save_path}" + '/cumulative_breaking.png',
+                    bbox_inches='tight',
+                    pad_inches=1)
+        plt.show()
+        plt.close("all")
+
+        # SAVE MATRIX
+        np.save(f"{self.save_path}" + '/mean_image_' + self.beach_name + '.npy', mean_img)
+        np.save(f"{self.save_path}" + '/mean_mask_' + self.beach_name + '.npy', mean_mask)
+
+    # -----------------------------------------------------------------
     # 
     # RUN MODEL
     #
     # -----------------------------------------------------------------
     def run_model(self):
         # IMAGES NAME
-        if self.number_img != False:
+        if self.number_img:
             list_img = self.load_list_img()[:self.number_img]
-        else: 
+        else:
             list_img = self.load_list_img()
 
         # LOAD MODEL
@@ -299,24 +339,18 @@ class DuckModel:
             self.plot_messages('PREDICTION N°' + str(ix + 1) + ' of ' + str(len(list_img)))
             # ---------------------------------------------------------
             x_tst, mean_image, original_img = self.split_img(name_img, size, mean_image)
-           
+
             # ---------------------------------------------------------
             masks = self.get_prediction(model, x_tst)
             # ---------------------------------------------------------
             mean_mask, mask = self.concatenate_and_save(masks, name_img, mean_mask, size)
 
-            if self.plot_mask_over_img:
-                plot_predictions(original_img, mask, self.beach_path, name_img, size)
+            if self.plot_mask_over_image:
+                plot_predictions(original_img, mask, self.mask_over_image_folder, name_img, size)
         # ---------------------------------------------------------
         # INTERPOLATION
         mean_mask = interp_cumulative_breaking(mean_mask, size)
         x_point, y_point, mean_mask = identify_sandbar_pts(mean_mask, self.orientation)
         # ---------------------------------------------------------
         # SAND BAR
-        plot_img_and_mask(mean_image,
-                          mean_mask,
-                          self.main_path,
-                          self.beach_path,
-                          x_point,
-                          y_point,
-                          self.orientation)
+        self.plot_img_and_mask(original_img, mean_mask, x_point, y_point)
