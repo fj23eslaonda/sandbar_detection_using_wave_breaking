@@ -4,14 +4,20 @@ This repository allows to identify sand bar using wave breaking patterns. To obt
 
 ## Inputs and parameters
 **Parameters**
-- `main_path`: Main folder where the repository is cloned    
-- `image_path`: Path of frames folder 
-- `output_path`: Path of mask folder 
-- `beach_path`: Path of beach folder to save results (inside of main_path)
-- `plot_mask`: Boolean variable to save plots or not
-- `plot_mask_over_img`: Boolean variable to save plots or not
-- `orientation`: Waves direction 
-- `number_img`: Number of images to be used
+```
+all_inputs = {
+    "main_path":  Main folder where the repository is cloned,    
+    "beach_path":  Path of beach folder to save results (inside of main_path),
+    "image_path": Path of frames folder,
+    "mask_folder": Folder name to save predicted mask,
+    "mask_over_image_folder": Folder name to save plot mask over image,
+    "sandbar_results": Folder name to save sandbar prediction,
+    "plot_mask": Boolean variable to save masks or not,
+    "plot_mask_over_img": Boolean variable to save plot or not,
+    "orientation": Waves direction,
+    "beach_name": Name of the beach analyzed
+}
+```
 
 **Inputs**
 
