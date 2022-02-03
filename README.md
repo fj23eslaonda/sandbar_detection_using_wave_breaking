@@ -60,7 +60,7 @@ The algorithm uses tensorflow packages then it's necessary to create a new virtu
 1. `cd ./Desktop/main_path`
 2. `pip install -r requirements.txt`
 3. Create **folders** with datasets
-4. `python3 run_prediction.py --beach_path /beach_folder/ --image_path /frames/ --output_path /prediction_mask/ --orientation vertical/horizontal --plot_mask True --plot_mask_over_mask True --number_img 50`
+4. `python3 run_prediction.py --parameters ./all_inputs.json --number_img 50`
 
 ## Comments
 - `main_path` by default is the folder where the repository is cloned using `os.getcwd()`
