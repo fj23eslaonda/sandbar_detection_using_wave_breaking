@@ -43,9 +43,10 @@ Main_folder
          ├─── best_model_final.h5
          ├─── model_final.json
     ├─── duck_model.py
-    ├─── sandbar.py
+    ├─── all_functions.py
     ├─── run_prediction.py
     ├─── requirements.py
+    ├─── all_inputs.json
 ```    
 
 ## Implementation
